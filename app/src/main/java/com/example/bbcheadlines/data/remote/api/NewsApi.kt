@@ -1,4 +1,4 @@
-package com.example.bbcheadlines.data.remote
+package com.example.bbcheadlines.data.remote.api
 
 import com.example.bbcheadlines.data.remote.dto.TopHeadlinesResponseDto
 import retrofit2.http.GET

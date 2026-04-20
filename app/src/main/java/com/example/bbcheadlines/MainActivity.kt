@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
-import com.example.bbcheadlines.data.remote.NewsApi
+import com.example.bbcheadlines.data.remote.api.NewsApi
 import com.example.bbcheadlines.ui.theme.BBCHeadlinesTheme
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
