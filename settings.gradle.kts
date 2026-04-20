@@ -22,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "BBC Headlines"
+rootProject.name = "News Headlines"
 include(":app")
  

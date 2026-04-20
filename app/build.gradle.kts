@@ -12,7 +12,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.bbcheadlines"
+        applicationId = "com.example.newsheadlines"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
