@@ -44,7 +44,10 @@ fun AppNavGraph(
                 ?.get<Article>("article")
 
             article?.let {
-                DetailScreen(article = it)
+                DetailScreen(
+                    article = it,
+                    onBackClick = { navController.popBackStack() }
+                )
             }
         }
     }
