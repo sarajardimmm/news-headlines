@@ -11,6 +11,7 @@ fun ArticleDto.toDomain(): Article {
         description = description,
         content = content.orEmpty().cleanTruncatedContent(),
         imageUrl = urlToImage,
+        url = url,
         publishedAt = publishedAt?.toReadableDate(),
         publishedAtRaw = publishedAt
     )

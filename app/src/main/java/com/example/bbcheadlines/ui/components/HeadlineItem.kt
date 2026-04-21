@@ -81,7 +81,8 @@ fun HeadlineItemPreview() {
                     content = "Full content here...",
                     imageUrl = "https://example.com/image.jpg",
                     publishedAt = "20 Apr 2024",
-                    publishedAtRaw = "2024-04-20T21:23:26Z"
+                    publishedAtRaw = "2024-04-20T21:23:26Z",
+                    url = "https://www.bbc.com"
                 ),
                 onClick = {}
             )

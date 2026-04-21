@@ -161,7 +161,8 @@ fun HeadlinesScreenSuccessPreview() {
                             content = "Full content here...",
                             imageUrl = null,
                             publishedAt = "21 Apr 2024",
-                            publishedAtRaw = "2024-04-20T21:23:26Z"
+                            publishedAtRaw = "2024-04-20T21:23:26Z",
+                            url = "https://www.bbc.com"
                         ),
                         Article(
                             title = "Another breaking news story",
@@ -169,7 +170,8 @@ fun HeadlinesScreenSuccessPreview() {
                             content = "More content here...",
                             imageUrl = null,
                             publishedAt = "22 Apr 2024",
-                            publishedAtRaw = "2024-04-20T22:23:26Z"
+                            publishedAtRaw = "2024-04-20T22:23:26Z",
+                            url = "https://www.bbc.com"
                         )
                     )
                 ),

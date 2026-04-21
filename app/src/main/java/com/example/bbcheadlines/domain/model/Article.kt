@@ -9,6 +9,7 @@ data class Article(
     val description: String?,
     val content: String?,
     val imageUrl: String?,
+    val url: String?,
     val publishedAt: String?,
     val publishedAtRaw: String?
 ) : Parcelable
