@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter
 fun String.toReadableDate(): String {
     return try {
         val instant = Instant.parse(this)
-        val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy") //this matches the editorial style of BBC, NYT, etc.
+        val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm") //this matches the editorial style of BBC, NYT, etc.
             .withZone(ZoneId.systemDefault())
 
         formatter.format(instant)

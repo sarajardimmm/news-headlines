@@ -23,7 +23,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.bbcheadlines.R
 import com.example.bbcheadlines.domain.model.Article
-import com.example.bbcheadlines.ui.theme.BBCHeadlinesTheme
+import com.example.bbcheadlines.ui.theme.NewsHeadlinesTheme
 
 @Composable
 fun HeadlineItem(
@@ -72,7 +72,7 @@ fun HeadlineItem(
 @Preview(showBackground = true)
 @Composable
 fun HeadlineItemPreview() {
-    BBCHeadlinesTheme {
+    NewsHeadlinesTheme {
         Surface(modifier = Modifier.padding(16.dp)) {
             HeadlineItem(
                 article = Article(

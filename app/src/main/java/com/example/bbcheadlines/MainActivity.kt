@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.bbcheadlines.navigation.AppNavGraph
+import com.example.bbcheadlines.ui.theme.NewsHeadlinesTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,12 +18,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            NewsHeadlinesTheme {
                 val navController = rememberNavController()
 
                 AppNavGraph(
                     navController = navController,
                     modifier = Modifier.fillMaxSize()
                 )
+            }
         }
     }
 }

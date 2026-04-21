@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bbcheadlines.domain.model.Article
 import com.example.bbcheadlines.ui.components.HeadlineItem
-import com.example.bbcheadlines.ui.theme.BBCHeadlinesTheme
+import com.example.bbcheadlines.ui.theme.NewsHeadlinesTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -108,7 +108,7 @@ fun HeadlinesScreen(
 @Preview(showBackground = true, name = "Loading State")
 @Composable
 fun HeadlinesScreenLoadingPreview() {
-    BBCHeadlinesTheme {
+    NewsHeadlinesTheme {
         Surface {
             HeadlinesScreen(
                 uiState = HeadlinesUiState(isLoading = true),
@@ -122,7 +122,7 @@ fun HeadlinesScreenLoadingPreview() {
 @Preview(showBackground = true, name = "Error State")
 @Composable
 fun HeadlinesScreenErrorPreview() {
-    BBCHeadlinesTheme {
+    NewsHeadlinesTheme {
         Surface {
             HeadlinesScreen(
                 uiState = HeadlinesUiState(errorMessage = "An unexpected error occurred."),
@@ -136,7 +136,7 @@ fun HeadlinesScreenErrorPreview() {
 @Preview(showBackground = true, name = "Empty State")
 @Composable
 fun HeadlinesScreenEmptyPreview() {
-    BBCHeadlinesTheme {
+    NewsHeadlinesTheme {
         Surface {
             HeadlinesScreen(
                 uiState = HeadlinesUiState(articles = emptyList()),
@@ -150,7 +150,7 @@ fun HeadlinesScreenEmptyPreview() {
 @Preview(showBackground = true, name = "Success State")
 @Composable
 fun HeadlinesScreenSuccessPreview() {
-    BBCHeadlinesTheme {
+    NewsHeadlinesTheme {
         Surface {
             HeadlinesScreen(
                 uiState = HeadlinesUiState(
