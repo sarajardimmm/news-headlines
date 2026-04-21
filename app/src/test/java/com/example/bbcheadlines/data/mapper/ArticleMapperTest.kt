@@ -14,7 +14,8 @@ class ArticleMapperTest {
             description = "Description",
             content = "Content... [+123 chars]",
             urlToImage = "url",
-            publishedAt = "2024-04-20T21:23:26Z"
+            publishedAt = "2024-04-20T21:23:26Z",
+            url = "url"
         )
 
         // When
@@ -37,7 +38,8 @@ class ArticleMapperTest {
             description = null,
             content = null,
             urlToImage = null,
-            publishedAt = null
+            publishedAt = null,
+            url = null
         )
 
         // When
