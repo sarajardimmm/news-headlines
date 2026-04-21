@@ -14,6 +14,8 @@ class NewsRepositoryImpl @Inject constructor(
         return newsApi.getTopHeadlines(
             source = BuildConfig.NEWS_SOURCE,
             apiKey = BuildConfig.NEWS_API_KEY
-        ).articles.map { it.toDomain() }
+        ).articles
+            .map { it.toDomain() }
+            .sortedByDescending { it.publishedAtRaw }
     }
 }

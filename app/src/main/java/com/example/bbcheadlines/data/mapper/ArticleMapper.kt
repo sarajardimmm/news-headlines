@@ -1,5 +1,6 @@
 package com.example.bbcheadlines.data.mapper
 
+import com.example.bbcheadlines.core.util.toReadableDate
 import com.example.bbcheadlines.data.remote.dto.ArticleDto
 import com.example.bbcheadlines.domain.model.Article
 
@@ -9,6 +10,7 @@ fun ArticleDto.toDomain(): Article {
         description = description,
         content = content,
         imageUrl = urlToImage,
-        publishedAt = publishedAt
+        publishedAt = publishedAt?.toReadableDate(),
+        publishedAtRaw = publishedAt
     )
 }

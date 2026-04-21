@@ -160,14 +160,16 @@ fun HeadlinesScreenSuccessPreview() {
                             description = "Follow the latest news from the BBC with our live updates.",
                             content = "Full content here...",
                             imageUrl = null,
-                            publishedAt = "2024-04-20T21:23:26Z"
+                            publishedAt = "21 Apr 2024",
+                            publishedAtRaw = "2024-04-20T21:23:26Z"
                         ),
                         Article(
                             title = "Another breaking news story",
                             description = "Important details about a global event.",
                             content = "More content here...",
                             imageUrl = null,
-                            publishedAt = "2024-04-20T22:23:26Z"
+                            publishedAt = "22 Apr 2024",
+                            publishedAtRaw = "2024-04-20T22:23:26Z"
                         )
                     )
                 ),
