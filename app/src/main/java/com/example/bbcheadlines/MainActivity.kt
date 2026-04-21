@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.example.bbcheadlines.feature.headlines.HeadlinesScreen
 import com.example.bbcheadlines.feature.headlines.HeadlinesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,11 +23,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             val uiState by viewModel.uiState.collectAsState()
 
-            when {
-                uiState.isLoading -> Text("Loading...")
-                uiState.errorMessage != null -> Text(uiState.errorMessage ?: "")
-                else -> Text("Articles: ${uiState.articles.size}")
-            }
+            HeadlinesScreen(
+                uiState = uiState,
+                onRetry = viewModel::loadHeadlines,
+                onArticleClick = { article ->
+                    // navigation later
+                }
+            )
         }
     }
 }
