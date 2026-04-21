@@ -18,8 +18,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.bbcheadlines.R
 import com.example.bbcheadlines.domain.model.Article
 import com.example.bbcheadlines.ui.components.HeadlineItem
 import com.example.bbcheadlines.ui.theme.NewsHeadlinesTheme
@@ -36,7 +38,7 @@ fun HeadlinesScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "BBC News",
+                        text = stringResource(R.string.news_source_name),
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
@@ -63,7 +65,7 @@ fun HeadlinesScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     TextButton(onClick = onRetry) {
-                        Text(text = "Retry")
+                        Text(text = stringResource(R.string.retry))
                     }
                 }
             }
@@ -76,7 +78,7 @@ fun HeadlinesScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "No headlines available.",
+                        text = stringResource(R.string.no_headlines_available),
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }

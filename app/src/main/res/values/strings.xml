@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">News Headlines</string>
+    <string name="news_source_name">BBC News</string>
+    <string name="retry">Retry</string>
+    <string name="no_headlines_available">No headlines available.</string>
+    <string name="article_detail_title">Article</string>
+    <string name="read_full_article">Read full article</string>
+    <string name="back">Back</string>
+    <string name="error_loading_headlines">Failed to load headlines.</string>
 </resources>
