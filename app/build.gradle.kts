@@ -31,8 +31,26 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "NEWS_API_KEY", "\"$newsApiKey\"")
-        buildConfigField("String", "NEWS_SOURCE", "\"bbc-news\"")
-        buildConfigField("String", "NEWS_PROVIDER_NAME", "\"BBC News\"")
+    }
+
+    flavorDimensions += "provider"
+
+    productFlavors {
+        create("bbc") {
+            dimension = "provider"
+            buildConfigField("String", "NEWS_SOURCE", "\"bbc-news\"")
+            buildConfigField("String", "NEWS_PROVIDER_NAME", "\"BBC News\"")
+            resValue("string", "app_name", "News Headlines BBC")
+            applicationIdSuffix = ".bbc"
+        }
+
+        create("abc") {
+            dimension = "provider"
+            buildConfigField("String", "NEWS_SOURCE", "\"abc-news\"")
+            buildConfigField("String", "NEWS_PROVIDER_NAME", "\"ABC News\"")
+            resValue("string", "app_name", "News Headlines ABC")
+            applicationIdSuffix = ".abc"
+        }
     }
 
     buildTypes {
@@ -50,6 +68,7 @@ android {
     }
     buildFeatures {
         compose = true
+        resValues = true
         buildConfig = true
     }
 }
