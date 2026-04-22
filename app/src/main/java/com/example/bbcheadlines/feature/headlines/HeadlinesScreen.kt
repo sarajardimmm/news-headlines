@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.bbcheadlines.BuildConfig
 import com.example.bbcheadlines.R
 import com.example.bbcheadlines.domain.model.Article
 import com.example.bbcheadlines.feature.detail.DetailContent
@@ -128,10 +129,9 @@ fun AdaptiveHeadlinesScreen(
 fun HeadlinesTopAppBar() {
     CenterAlignedTopAppBar(
         title = {
-            AsyncImage(
-                model = R.drawable.logo,
-                contentDescription = null,
-                modifier = Modifier.height(32.dp)
+            Text(
+                text = BuildConfig.NEWS_PROVIDER_NAME,
+                style = MaterialTheme.typography.headlineMedium
             )
         }
     )
