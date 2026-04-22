@@ -4,9 +4,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -14,14 +16,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.bbcheadlines.BuildConfig
+import coil.compose.AsyncImage
 import com.example.bbcheadlines.R
 import com.example.bbcheadlines.domain.model.Article
 import com.example.bbcheadlines.ui.components.HeadlineItem
@@ -36,11 +37,12 @@ fun HeadlinesScreen(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
-                    Text(
-                        text = BuildConfig.NEWS_PROVIDER_NAME,
-                        style = MaterialTheme.typography.titleLarge
+                    AsyncImage(
+                        model = R.drawable.logo,
+                        contentDescription = null,
+                        modifier = Modifier.height(32.dp)
                     )
                 }
             )
