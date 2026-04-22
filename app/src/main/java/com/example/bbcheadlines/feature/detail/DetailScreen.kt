@@ -106,11 +106,13 @@ fun DetailContent(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                DetailImage(
-                    imageUrl = article.imageUrl,
-                    title = article.title,
-                    modifier = Modifier.aspectRatio(1f)
-                )
+                article.imageUrl?.let {
+                    DetailImage(
+                        imageUrl = it,
+                        title = article.title,
+                        modifier = Modifier.aspectRatio(1f)
+                    )
+                }
                 PublishedAtText(article.publishedAt)
             }
 
@@ -133,16 +135,17 @@ fun DetailContent(
         ) {
             ArticleHeader(article.title)
             
-            Spacer(modifier = Modifier.height(20.dp))
-            
-            DetailImage(
-                imageUrl = article.imageUrl,
-                title = article.title,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = if (extraPadding) 64.dp else 0.dp)
-                    .aspectRatio(16f / 9f)
-            )
+            article.imageUrl?.let {
+                Spacer(modifier = Modifier.height(20.dp))
+                DetailImage(
+                    imageUrl = it,
+                    title = article.title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = if (extraPadding) 64.dp else 0.dp)
+                        .aspectRatio(16f / 9f)
+                )
+            }
             
             Spacer(modifier = Modifier.height(12.dp))
             
@@ -160,7 +163,7 @@ fun DetailContent(
 
 @Composable
 private fun DetailImage(
-    imageUrl: String?,
+    imageUrl: String,
     title: String,
     modifier: Modifier = Modifier
 ) {
@@ -217,7 +220,7 @@ private fun ArticleContent(article: Article, context: Context) {
             )
         }
 
-        article.url?.let { url ->
+        article.url?.takeIf { it.isNotEmpty() }?.let { url ->
             Text(
                 text = stringResource(R.string.read_full_article),
                 style = MaterialTheme.typography.labelLarge.copy(
