@@ -28,16 +28,13 @@ fun AppNavGraph(
     val widthSizeClass = windowSizeClass.widthSizeClass
     val heightSizeClass = windowSizeClass.heightSizeClass
 
-    // Responsive Logic:
-    // - Expanded Width: Large Tablets (Landscape) -> Two Pane
-    // - Medium Width + Not Compact Height: Tablets (Portrait) -> Two Pane
-    // - Compact Height: Phones (Landscape) -> Single Pane
-    // - Compact Width: Phones (Portrait) -> Single Pane
-    val showTwoPane = when {
-        widthSizeClass == WindowWidthSizeClass.Expanded -> true
-        widthSizeClass == WindowWidthSizeClass.Medium && heightSizeClass != WindowHeightSizeClass.Compact -> true
-        else -> false
-    }
+    // Strict Tablet Detection Logic:
+    // A device is only considered a Tablet/Two-Pane-capable if NEITHER dimension is Compact.
+    // - Phone Portrait: Width is Compact -> Single Pane
+    // - Phone Landscape: Height is Compact -> Single Pane
+    // - Tablet: Both Width and Height are Medium or Expanded -> Two Pane
+    val showTwoPane = widthSizeClass != WindowWidthSizeClass.Compact && 
+                      heightSizeClass != WindowHeightSizeClass.Compact
 
     NavHost(
         navController = navController,

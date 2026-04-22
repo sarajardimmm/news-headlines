@@ -2,6 +2,7 @@ package com.example.bbcheadlines.feature.detail
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,9 +10,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,12 +30,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,6 +54,9 @@ fun DetailScreen(
     article: Article,
     onBackClick: () -> Unit
 ) {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -66,7 +75,8 @@ fun DetailScreen(
         DetailContent(
             article = article,
             modifier = Modifier.padding(innerPadding),
-            useHorizontalLayout = false
+            useHorizontalLayout = false,
+            extraPadding = isLandscape
         )
     }
 }
@@ -75,51 +85,75 @@ fun DetailScreen(
 fun DetailContent(
     article: Article,
     modifier: Modifier = Modifier,
-    useHorizontalLayout: Boolean = false
+    useHorizontalLayout: Boolean = false,
+    extraPadding: Boolean = false
 ) {
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
+
+    LaunchedEffect(article) {
+        scrollState.scrollTo(0)
+    }
     
     if (useHorizontalLayout) {
         Row(
             modifier = modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(24.dp),
+            horizontalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            DetailImage(
-                imageUrl = article.imageUrl,
-                title = article.title,
-                modifier = Modifier
-                    .weight(1f)
-                    .aspectRatio(1f)
-            )
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                DetailImage(
+                    imageUrl = article.imageUrl,
+                    title = article.title,
+                    modifier = Modifier.aspectRatio(1f)
+                )
+                PublishedAtText(article.publishedAt)
+            }
 
             Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .weight(1.2f)
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                ArticleDetails(article, context)
+                ArticleHeader(article.title)
+                ArticleContent(article, context)
             }
         }
     } else {
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .verticalScroll(scrollState)
+                .padding(horizontal = 16.dp, vertical = 24.dp)
         ) {
+            ArticleHeader(article.title)
+            
+            Spacer(modifier = Modifier.height(20.dp))
+            
             DetailImage(
                 imageUrl = article.imageUrl,
                 title = article.title,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = if (extraPadding) 64.dp else 0.dp)
                     .aspectRatio(16f / 9f)
             )
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            PublishedAtText(
+                date = article.publishedAt,
+                modifier = Modifier.padding(horizontal = if (extraPadding) 64.dp else 0.dp)
+            )
 
-            ArticleDetails(article, context)
+            Spacer(modifier = Modifier.height(32.dp))
+
+            ArticleContent(article, context)
         }
     }
 }
@@ -146,50 +180,59 @@ private fun DetailImage(
 }
 
 @Composable
-private fun ArticleDetails(article: Article, context: Context) {
-    Text(
-        text = article.title,
-        style = MaterialTheme.typography.headlineMedium
-    )
-
-    article.publishedAt?.let {
+private fun PublishedAtText(date: String?, modifier: Modifier = Modifier) {
+    date?.let {
         Text(
             text = it,
             style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.outline
+            color = MaterialTheme.colorScheme.outline,
+            modifier = modifier
         )
     }
+}
 
-    article.description?.let {
-        Text(
-            text = it,
-            style = MaterialTheme.typography.bodyLarge
-        )
-    }
+@Composable
+private fun ArticleHeader(title: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.headlineMedium
+    )
+}
 
-    article.content?.let {
-        Text(
-            text = it,
-            style = MaterialTheme.typography.bodyMedium
-        )
-    }
+@Composable
+private fun ArticleContent(article: Article, context: Context) {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        article.description?.let {
+            Text(
+                text = it,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
+            )
+        }
 
-    article.url?.let { url ->
-        Text(
-            text = stringResource(R.string.read_full_article),
-            style = MaterialTheme.typography.labelLarge.copy(
-                textDecoration = TextDecoration.Underline
-            ),
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.clickable {
-                try {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    context.startActivity(intent)
-                } catch (e: Exception) {
-                    // Handle cases where no browser is available or URL is malformed
+        article.content?.let {
+            Text(
+                text = it,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+
+        article.url?.let { url ->
+            Text(
+                text = stringResource(R.string.read_full_article),
+                style = MaterialTheme.typography.labelLarge.copy(
+                    textDecoration = TextDecoration.Underline
+                ),
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.clickable {
+                    try {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        context.startActivity(intent)
+                    } catch (e: Exception) {
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 }
 
