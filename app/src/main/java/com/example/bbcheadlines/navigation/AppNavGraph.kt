@@ -1,11 +1,12 @@
 package com.example.bbcheadlines.navigation
 
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -25,7 +26,18 @@ fun AppNavGraph(
     modifier: Modifier = Modifier
 ) {
     val widthSizeClass = windowSizeClass.widthSizeClass
-    val useNavRailOrSideBar = widthSizeClass != WindowWidthSizeClass.Compact
+    val heightSizeClass = windowSizeClass.heightSizeClass
+
+    // Responsive Logic:
+    // - Expanded Width: Large Tablets (Landscape) -> Two Pane
+    // - Medium Width + Not Compact Height: Tablets (Portrait) -> Two Pane
+    // - Compact Height: Phones (Landscape) -> Single Pane
+    // - Compact Width: Phones (Portrait) -> Single Pane
+    val showTwoPane = when {
+        widthSizeClass == WindowWidthSizeClass.Expanded -> true
+        widthSizeClass == WindowWidthSizeClass.Medium && heightSizeClass != WindowHeightSizeClass.Compact -> true
+        else -> false
+    }
 
     NavHost(
         navController = navController,
@@ -36,9 +48,10 @@ fun AppNavGraph(
             val viewModel: HeadlinesViewModel = hiltViewModel()
             val uiState = viewModel.uiState
             
-            var selectedArticle by remember { mutableStateOf<Article?>(null) }
+            // Detail Screen State: survives rotation
+            var selectedArticle by rememberSaveable { mutableStateOf<Article?>(null) }
 
-            if (useNavRailOrSideBar) {
+            if (showTwoPane) {
                 AdaptiveHeadlinesScreen(
                     uiStateFlow = uiState,
                     onRetry = viewModel::loadHeadlines,
