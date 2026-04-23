@@ -273,7 +273,7 @@ fun HeadlinesContent(
                 ) {
                     items(
                         items = uiState.articles,
-                        key = { article -> article.title }
+                        key = { it.url ?: "${it.title}-${it.publishedAtRaw}" }
                     ) { article ->
                         HeadlineItem(
                             article = article,
