@@ -1,6 +1,7 @@
 package com.example.bbcheadlines.feature.headlines
 
 import android.content.res.Configuration
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,10 +9,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -24,16 +27,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.example.bbcheadlines.BuildConfig
 import com.example.bbcheadlines.R
 import com.example.bbcheadlines.domain.model.Article
@@ -67,6 +74,7 @@ fun HeadlinesScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdaptiveHeadlinesScreen(
     uiStateFlow: StateFlow<HeadlinesUiState>,
@@ -142,6 +150,7 @@ fun HeadlinesTopAppBar() {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HeadlinesContent(
     uiState: HeadlinesUiState,
@@ -150,54 +159,77 @@ fun HeadlinesContent(
     useHorizontalLayout: Boolean,
     modifier: Modifier = Modifier
 ) {
-    when {
-        uiState.isLoading -> {
-            Box(
-                modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        }
+    val state = rememberPullToRefreshState()
+    val isRefreshing = uiState.isLoading && uiState.articles.isNotEmpty()
 
-        uiState.errorMessage != null -> {
-            Box(
-                modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                TextButton(onClick = onRetry) {
-                    Text(text = stringResource(R.string.retry))
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = onRetry,
+        state = state,
+        indicator = {
+            PullToRefreshDefaults.Indicator(
+                state = state,
+                isRefreshing = isRefreshing,
+                modifier = Modifier.align(Alignment.TopCenter),
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                color = MaterialTheme.colorScheme.primary
+            )
+        },
+        modifier = modifier.fillMaxSize()
+    ) {
+        when {
+            uiState.isLoading && uiState.articles.isEmpty() -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
                 }
             }
-        }
 
-        uiState.articles.isEmpty() -> {
-            Box(
-                modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.no_headlines_available),
-                    style = MaterialTheme.typography.bodyLarge
-                )
+            uiState.errorMessage != null -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
+                    contentAlignment = Alignment.Center
+                ) {
+                    TextButton(onClick = onRetry) {
+                        Text(text = stringResource(R.string.retry))
+                    }
+                }
             }
-        }
 
-        else -> {
-            LazyColumn(
-                modifier = modifier.fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                items(
-                    items = uiState.articles,
-                    key = { article -> article.title }
-                ) { article ->
-                    HeadlineItem(
-                        article = article,
-                        onClick = { onArticleClick(article) },
-                        useHorizontalLayout = useHorizontalLayout
+            uiState.articles.isEmpty() -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(R.string.no_headlines_available),
+                        style = MaterialTheme.typography.bodyLarge
                     )
+                }
+            }
+
+            else -> {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    items(
+                        items = uiState.articles,
+                        key = { article -> article.title }
+                    ) { article ->
+                        HeadlineItem(
+                            article = article,
+                            onClick = { onArticleClick(article) },
+                            useHorizontalLayout = useHorizontalLayout
+                        )
+                    }
                 }
             }
         }
