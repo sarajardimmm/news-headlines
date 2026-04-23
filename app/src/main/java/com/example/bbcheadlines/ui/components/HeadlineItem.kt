@@ -112,7 +112,7 @@ private fun HeadlineImage(
             .data(imageUrl)
             .crossfade(true)
             .build(),
-        contentDescription = title,
+        contentDescription = null,
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
             .background(colorResource(R.color.placeholder_grey)),
