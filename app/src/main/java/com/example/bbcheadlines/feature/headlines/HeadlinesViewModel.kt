@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.bbcheadlines.data.remote.repository.NewsRepository
 import com.example.bbcheadlines.domain.model.Article
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +30,8 @@ class HeadlinesViewModel @Inject constructor(
     private val _events = Channel<HeadlinesEvent>()
     val events = _events.receiveAsFlow()
 
+    private var loadJob: Job? = null
+
     fun onArticleSelected(article: Article) {
         _selectedArticle.value = article
     }
@@ -38,9 +41,11 @@ class HeadlinesViewModel @Inject constructor(
     }
 
     fun loadHeadlines() {
-        viewModelScope.launch {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
+            delay(2000)
             try {
                 val articles = repository.getTopHeadlines()
                 _uiState.update {
