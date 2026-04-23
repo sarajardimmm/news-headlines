@@ -42,10 +42,17 @@ class HeadlinesViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                _uiState.update { 
+
+                val errorMessage =
+                    if (uiState.value.articles.isEmpty())
+                        "Failed to load headlines."
+                    else
+                        "Couldn't refresh headlines."
+
+                _uiState.update {
                     it.copy(
                         isLoading = false,
-                        errorMessage = "Failed to load headlines."
+                        errorMessage = "$errorMessage\n\n${e.message}"
                     )
                 }
             }
