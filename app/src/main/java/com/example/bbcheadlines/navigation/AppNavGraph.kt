@@ -15,7 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.bbcheadlines.domain.model.Article
 import com.example.bbcheadlines.feature.detail.DetailScreen
-import com.example.bbcheadlines.feature.headlines.HeadlinesScreenRoute
+import com.example.bbcheadlines.feature.headlines.HeadlinesRoute
 import com.example.bbcheadlines.feature.headlines.HeadlinesViewModel
 import com.example.bbcheadlines.feature.headlines.AdaptiveHeadlinesScreen
 
@@ -33,8 +33,8 @@ fun AppNavGraph(
     // - Phone Portrait: Width is Compact -> Single Pane
     // - Phone Landscape: Height is Compact -> Single Pane
     // - Tablet: Both Width and Height are Medium or Expanded -> Two Pane
-    val showTwoPane = widthSizeClass != WindowWidthSizeClass.Compact && 
-                      heightSizeClass != WindowHeightSizeClass.Compact
+    val showTwoPane = widthSizeClass != WindowWidthSizeClass.Compact &&
+            heightSizeClass != WindowHeightSizeClass.Compact
 
     NavHost(
         navController = navController,
@@ -42,36 +42,16 @@ fun AppNavGraph(
         modifier = modifier
     ) {
         composable(Destinations.HEADLINES) {
-            val viewModel: HeadlinesViewModel = hiltViewModel()
-            val uiState = viewModel.uiState
-            
-            // Detail Screen State: survives rotation
-            var selectedArticle by rememberSaveable { mutableStateOf<Article?>(null) }
-
-            if (showTwoPane) {
-                AdaptiveHeadlinesScreen(
-                    uiStateFlow = uiState,
-                    events = viewModel.events,
-                    onRetry = viewModel::loadHeadlines,
-                    selectedArticle = selectedArticle,
-                    onArticleClick = { article -> selectedArticle = article },
-                    onCloseDetail = { selectedArticle = null },
-                    isMedium = widthSizeClass == WindowWidthSizeClass.Medium
-                )
-            } else {
-                HeadlinesScreenRoute(
-                    uiStateFlow = uiState,
-                    events = viewModel.events,
-                    onRetry = viewModel::loadHeadlines,
-                    onArticleClick = { article ->
-                        navController.currentBackStackEntry
-                            ?.savedStateHandle
-                            ?.set("article", article)
-
-                        navController.navigate(Destinations.DETAIL)
-                    }
-                )
-            }
+            HeadlinesRoute(
+                showTwoPane = showTwoPane,
+                isMedium = widthSizeClass == WindowWidthSizeClass.Medium,
+                onOpenArticle = { article ->
+                    navController.currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("article", article)
+                    navController.navigate(Destinations.DETAIL)
+                }
+            )
         }
 
         composable(Destinations.DETAIL) {

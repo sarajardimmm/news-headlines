@@ -32,8 +32,6 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,7 +48,6 @@ import com.example.bbcheadlines.feature.detail.DetailContent
 import com.example.bbcheadlines.ui.components.HeadlineItem
 import com.example.bbcheadlines.ui.theme.NewsHeadlinesTheme
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emptyFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,20 +60,8 @@ fun HeadlinesScreen(
 ) {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-    val context = LocalContext.current
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarHostState = rememberHeadlinesSnackbarHostState(events)
 
-    LaunchedEffect(Unit) {
-        events.collect { event ->
-            when (event) {
-                is HeadlinesEvent.ShowRefreshError -> {
-                    snackbarHostState.showSnackbar(
-                        message = context.getString(R.string.unable_to_refresh)
-                    )
-                }
-            }
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -99,29 +84,15 @@ fun HeadlinesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdaptiveHeadlinesScreen(
-    uiStateFlow: StateFlow<HeadlinesUiState>,
+    uiState: HeadlinesUiState,
     events: Flow<HeadlinesEvent>,
     onRetry: () -> Unit,
     selectedArticle: Article?,
     onArticleClick: (Article) -> Unit,
     onCloseDetail: () -> Unit,
-    isMedium: Boolean = false
+    isMediumWidth: Boolean = false
 ) {
-    val uiState by uiStateFlow.collectAsState()
-    val context = LocalContext.current
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(Unit) {
-        events.collect { event ->
-            when (event) {
-                is HeadlinesEvent.ShowRefreshError -> {
-                    snackbarHostState.showSnackbar(
-                        message = context.getString(R.string.unable_to_refresh)
-                    )
-                }
-            }
-        }
-    }
+    val snackbarHostState = rememberHeadlinesSnackbarHostState(events)
 
     Scaffold(
         topBar = {
@@ -137,7 +108,7 @@ fun AdaptiveHeadlinesScreen(
                 .padding(innerPadding)
         ) {
             // List Pane
-            val listWeight = if (selectedArticle == null) 1f else (if (isMedium) 1.2f else 1f)
+            val listWeight = if (selectedArticle == null) 1f else (if (isMediumWidth) 1.2f else 1f)
             val useHorizontalInList = selectedArticle == null
 
             Box(modifier = Modifier.weight(listWeight)) {
@@ -151,7 +122,7 @@ fun AdaptiveHeadlinesScreen(
 
             // Detail Pane
             if (selectedArticle != null) {
-                val detailWeight = if (isMedium) 1.8f else 2f
+                val detailWeight = if (isMediumWidth) 1.8f else 2f
                 Column(
                     modifier = Modifier
                         .weight(detailWeight)
@@ -163,7 +134,7 @@ fun AdaptiveHeadlinesScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = stringResource(R.string.back)
+                            contentDescription = "Close article detail"
                         )
                     }
                     
@@ -175,6 +146,28 @@ fun AdaptiveHeadlinesScreen(
             }
         }
     }
+}
+
+@Composable
+private fun rememberHeadlinesSnackbarHostState(
+    events: Flow<HeadlinesEvent>
+): SnackbarHostState {
+    val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(events) {
+        events.collect { event ->
+            when (event) {
+                HeadlinesEvent.ShowRefreshError -> {
+                    snackbarHostState.showSnackbar(
+                        message = context.getString(R.string.unable_to_refresh)
+                    )
+                }
+            }
+        }
+    }
+
+    return snackbarHostState
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

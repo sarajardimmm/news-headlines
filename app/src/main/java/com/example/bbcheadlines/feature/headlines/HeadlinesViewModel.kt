@@ -36,6 +36,10 @@ class HeadlinesViewModel @Inject constructor(
         _selectedArticle.value = article
     }
 
+    fun clearSelectedArticle() {
+        _selectedArticle.value = null
+    }
+
     init {
         loadHeadlines()
     }
@@ -45,7 +49,7 @@ class HeadlinesViewModel @Inject constructor(
         loadJob = viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
-            delay(2000)
+            delay(250)
             try {
                 val articles = repository.getTopHeadlines()
                 _uiState.update {
