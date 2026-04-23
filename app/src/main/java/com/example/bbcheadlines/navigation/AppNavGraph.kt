@@ -51,6 +51,7 @@ fun AppNavGraph(
             if (showTwoPane) {
                 AdaptiveHeadlinesScreen(
                     uiStateFlow = uiState,
+                    events = viewModel.events,
                     onRetry = viewModel::loadHeadlines,
                     selectedArticle = selectedArticle,
                     onArticleClick = { article -> selectedArticle = article },
@@ -60,6 +61,7 @@ fun AppNavGraph(
             } else {
                 HeadlinesScreenRoute(
                     uiStateFlow = uiState,
+                    events = viewModel.events,
                     onRetry = viewModel::loadHeadlines,
                     onArticleClick = { article ->
                         navController.currentBackStackEntry

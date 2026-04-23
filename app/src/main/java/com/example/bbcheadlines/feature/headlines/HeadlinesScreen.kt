@@ -22,6 +22,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -29,11 +31,14 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,21 +49,41 @@ import com.example.bbcheadlines.domain.model.Article
 import com.example.bbcheadlines.feature.detail.DetailContent
 import com.example.bbcheadlines.ui.components.HeadlineItem
 import com.example.bbcheadlines.ui.theme.NewsHeadlinesTheme
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.emptyFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HeadlinesScreen(
     uiState: HeadlinesUiState,
+    events: Flow<HeadlinesEvent>,
     onRetry: () -> Unit,
     onArticleClick: (Article) -> Unit
 ) {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        events.collect { event ->
+            when (event) {
+                is HeadlinesEvent.ShowRefreshError -> {
+                    snackbarHostState.showSnackbar(
+                        message = context.getString(R.string.unable_to_refresh)
+                    )
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
             HeadlinesTopAppBar()
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         }
     ) { innerPadding ->
         HeadlinesContent(
@@ -75,6 +100,7 @@ fun HeadlinesScreen(
 @Composable
 fun AdaptiveHeadlinesScreen(
     uiStateFlow: StateFlow<HeadlinesUiState>,
+    events: Flow<HeadlinesEvent>,
     onRetry: () -> Unit,
     selectedArticle: Article?,
     onArticleClick: (Article) -> Unit,
@@ -82,10 +108,27 @@ fun AdaptiveHeadlinesScreen(
     isMedium: Boolean = false
 ) {
     val uiState by uiStateFlow.collectAsState()
+    val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        events.collect { event ->
+            when (event) {
+                is HeadlinesEvent.ShowRefreshError -> {
+                    snackbarHostState.showSnackbar(
+                        message = context.getString(R.string.unable_to_refresh)
+                    )
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
             HeadlinesTopAppBar()
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         }
     ) { innerPadding ->
         Row(
@@ -184,7 +227,7 @@ fun HeadlinesContent(
                 }
             }
 
-            uiState.errorMessage != null -> {
+            uiState.errorMessage != null && uiState.articles.isEmpty() -> {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -263,6 +306,7 @@ fun HeadlinesScreenSuccessPreview() {
                         )
                     )
                 ),
+                events = emptyFlow(),
                 onRetry = {},
                 onArticleClick = {}
             )

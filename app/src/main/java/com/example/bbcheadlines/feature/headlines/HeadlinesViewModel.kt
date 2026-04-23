@@ -5,9 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.bbcheadlines.data.remote.repository.NewsRepository
 import com.example.bbcheadlines.domain.model.Article
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,12 +22,17 @@ class HeadlinesViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(HeadlinesUiState(isLoading = true))
     val uiState: StateFlow<HeadlinesUiState> = _uiState.asStateFlow()
+
     private val _selectedArticle = MutableStateFlow<Article?>(null)
     val selectedArticle: StateFlow<Article?> = _selectedArticle.asStateFlow()
+
+    private val _events = Channel<HeadlinesEvent>()
+    val events = _events.receiveAsFlow()
 
     fun onArticleSelected(article: Article) {
         _selectedArticle.value = article
     }
+
     init {
         loadHeadlines()
     }
@@ -35,25 +43,23 @@ class HeadlinesViewModel @Inject constructor(
 
             try {
                 val articles = repository.getTopHeadlines()
-                _uiState.update { 
+                _uiState.update {
                     it.copy(
                         isLoading = false,
                         articles = articles
                     )
                 }
             } catch (e: Exception) {
-
-                val errorMessage =
-                    if (uiState.value.articles.isEmpty())
-                        "Failed to load headlines."
-                    else
-                        "Couldn't refresh headlines."
-
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = "$errorMessage\n\n${e.message}"
-                    )
+                if (uiState.value.articles.isEmpty()) {
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = "Failed to load headlines.\n\n${e.message}"
+                        )
+                    }
+                } else {
+                    _uiState.update { it.copy(isLoading = false) }
+                    _events.send(HeadlinesEvent.ShowRefreshError)
                 }
             }
         }
