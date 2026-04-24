@@ -1,6 +1,9 @@
 package com.example.bbcheadlines.feature.headlines
 
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +36,7 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -49,6 +53,7 @@ import com.example.bbcheadlines.ui.components.HeadlineItem
 import com.example.bbcheadlines.ui.theme.NewsHeadlinesTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -137,17 +142,15 @@ fun AdaptiveHeadlinesScreen(
                             contentDescription = "Close article detail"
                         )
                     }
-                    
                     DetailContent(
                         article = selectedArticle,
-                        useHorizontalLayout = false
+                        snackbarHostState = snackbarHostState
                     )
                 }
             }
         }
     }
 }
-
 @Composable
 private fun rememberHeadlinesSnackbarHostState(
     events: Flow<HeadlinesEvent>
