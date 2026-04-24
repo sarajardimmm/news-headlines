@@ -23,7 +23,7 @@ class DemoNewsRepositoryImpl @Inject constructor() : NewsRepository {
                 content = "1. Go to newsapi.org and register for a free key. 2. Open local.properties in the project root. 3. Add NEWS_API_KEY=... 4. Sync Gradle and Run.",
                 imageUrl = "https://images.unsplash.com/photo-1495020689067-958852a7765e?q=80&w=1000&auto=format&fit=crop",
                 url = "https://newsapi.org/docs/endpoints/top-headlines",
-                publishedAt = "1 hour ago",
+                publishedAt = "1h ago",
                 publishedAtRaw = "2024-04-20T20:23:26Z"
             ),
             Article(
@@ -32,7 +32,7 @@ class DemoNewsRepositoryImpl @Inject constructor() : NewsRepository {
                 content = "Even in demo mode, you can test the adaptive layout by rotating the device or running on a tablet/foldable emulator.",
                 imageUrl = "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1000&auto=format&fit=crop",
                 url = "https://developer.android.com/jetpack/compose",
-                publishedAt = "2 hours ago",
+                publishedAt = "2h ago",
                 publishedAtRaw = "2024-04-20T19:23:26Z"
             )
         )
