@@ -1,9 +1,6 @@
 package com.example.bbcheadlines.feature.headlines
 
-import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,17 +27,18 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,10 +48,10 @@ import com.example.bbcheadlines.R
 import com.example.bbcheadlines.domain.model.Article
 import com.example.bbcheadlines.feature.detail.DetailContent
 import com.example.bbcheadlines.ui.components.HeadlineItem
+import com.example.bbcheadlines.ui.components.NewsHeadlinesTopAppBar
 import com.example.bbcheadlines.ui.theme.NewsHeadlinesTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,7 +68,7 @@ fun HeadlinesScreen(
 
     Scaffold(
         topBar = {
-            HeadlinesTopAppBar()
+            NewsHeadlinesTopAppBar()
         },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -101,7 +99,7 @@ fun AdaptiveHeadlinesScreen(
 
     Scaffold(
         topBar = {
-            HeadlinesTopAppBar()
+            NewsHeadlinesTopAppBar()
         },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -171,19 +169,6 @@ private fun rememberHeadlinesSnackbarHostState(
     }
 
     return snackbarHostState
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HeadlinesTopAppBar() {
-    CenterAlignedTopAppBar(
-        title = {
-            Text(
-                text = BuildConfig.NEWS_PROVIDER_NAME,
-                style = MaterialTheme.typography.headlineMedium
-            )
-        }
-    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -265,7 +250,7 @@ fun HeadlinesContent(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(
                         items = uiState.articles,
@@ -299,6 +284,15 @@ fun HeadlinesScreenSuccessPreview() {
                             publishedAt = "21 Apr 2024",
                             publishedAtRaw = "2024-04-20T21:23:26Z",
                             url = "https://www.bbc.com"
+                        ),
+                        Article(
+                            title = "Another latest news from the BBC",
+                            description = "Follow the latest news from the BBC with our live updates.",
+                            content = "Full content here...",
+                            imageUrl = null,
+                            publishedAt = "21 Apr 2024",
+                            publishedAtRaw = "2024-04-20T21:23:26Z",
+                            url = "https://www.bbc-mews.com"
                         )
                     )
                 ),

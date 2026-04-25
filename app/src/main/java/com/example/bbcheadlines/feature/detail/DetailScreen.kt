@@ -49,6 +49,7 @@ import coil.request.ImageRequest
 import com.example.bbcheadlines.BuildConfig
 import com.example.bbcheadlines.R
 import com.example.bbcheadlines.domain.model.Article
+import com.example.bbcheadlines.ui.components.NewsHeadlinesTopAppBar
 import com.example.bbcheadlines.ui.theme.NewsHeadlinesTheme
 import kotlinx.coroutines.launch
 
@@ -66,14 +67,8 @@ fun DetailScreen(
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = BuildConfig.NEWS_PROVIDER_NAME,
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-                },
-                navigationIcon = {
+            NewsHeadlinesTopAppBar(
+                    navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
