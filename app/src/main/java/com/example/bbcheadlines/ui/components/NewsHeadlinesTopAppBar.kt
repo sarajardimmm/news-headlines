@@ -6,9 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.colorResource
 import com.example.bbcheadlines.BuildConfig
-import com.example.bbcheadlines.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,8 +21,10 @@ fun NewsHeadlinesTopAppBar(navigationIcon: @Composable () -> Unit = {}) {
             )
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = colorResource(R.color.brand_primary),
-            titleContentColor = MaterialTheme.colorScheme.onPrimary
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary,
+            navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+            actionIconContentColor = MaterialTheme.colorScheme.onPrimary
         ),
         navigationIcon = navigationIcon
     )

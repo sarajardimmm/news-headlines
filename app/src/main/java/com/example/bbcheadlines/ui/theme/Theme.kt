@@ -10,20 +10,9 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import com.example.bbcheadlines.R
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80,
-    onPrimary = Color.White
-)
-
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
-    onPrimary = Color.White
-)
 
 @Composable
 fun NewsHeadlinesTheme(
@@ -31,14 +20,34 @@ fun NewsHeadlinesTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
+    val brandPrimary = colorResource(R.color.brand_primary)
+
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> darkColorScheme(
+            primary = brandPrimary,
+            secondary = AppPrimaryDark,
+            onPrimary = Color.White,
+            background = AppBackgroundDark,
+            surface = AppSurfaceDark,
+            onSurface = AppOnSurfaceDark,
+            surfaceVariant = AppSurfaceVariantDark,
+            onSurfaceVariant = AppOnSurfaceVariantDark
+        )
+        else -> lightColorScheme(
+            primary = brandPrimary,
+            secondary = brandPrimary,
+            onPrimary = Color.White,
+            background = AppBackgroundLight,
+            surface = AppSurfaceLight,
+            onSurface = AppOnSurfaceLight,
+            surfaceVariant = AppSurfaceVariantLight,
+            onSurfaceVariant = AppOnSurfaceVariantLight
+        )
     }
 
     MaterialTheme(

@@ -226,7 +226,7 @@ private fun ArticleContent(
                     style = MaterialTheme.typography.labelLarge.copy(
                         textDecoration = TextDecoration.Underline
                     ),
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier.clickable {
                         onReadFullArticleClick(url)
                     }
