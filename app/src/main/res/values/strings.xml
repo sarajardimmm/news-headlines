@@ -2,9 +2,7 @@
     <string name="app_name">News Headlines</string>
     <string name="retry">Retry</string>
     <string name="no_headlines_available">No headlines available.</string>
-    <string name="article_detail_title">Article Detail</string>
     <string name="back">Back</string>
     <string name="read_full_article">Read full article</string>
-    <string name="select_article_to_read">Select an article to read</string>
     <string name="unable_to_refresh">Unable to refresh</string>
 </resources>
