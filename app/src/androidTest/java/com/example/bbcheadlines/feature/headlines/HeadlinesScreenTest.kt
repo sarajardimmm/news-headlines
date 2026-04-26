@@ -2,6 +2,7 @@ package com.example.bbcheadlines.feature.headlines
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.example.bbcheadlines.domain.model.Article
@@ -95,9 +96,8 @@ class HeadlinesScreenTest {
             }
         }
 
-        // Then loading indicator should be present (finding by type since it has no text)
-        // Note: For production, adding a testTag to CircularProgressIndicator is better
-        // composeTestRule.onNodeWithTag("loading").assertIsDisplayed()
+        // Then loading indicator should be present
+        composeTestRule.onNodeWithTag("loading_indicator").assertIsDisplayed()
     }
 
     private fun createFakeArticle(title: String) = Article(
