@@ -18,10 +18,10 @@ class DateUtilsTest {
     }
 
     @Test
-    fun `toReadableDate should return Just Now for very recent dates`() {
+    fun `toReadableDate should return Just now for very recent dates`() {
         val now = Instant.parse("2024-04-20T21:23:26Z")
         val input = "2024-04-20T21:23:00Z"
-        val expected = "Just Now"
+        val expected = "Just now"
 
         val result = input.toReadableDate(now)
 
@@ -51,13 +51,13 @@ class DateUtilsTest {
     }
 
     @Test
-    fun `toReadableDate should return raw string if parsing fails`() {
+    fun `toReadableDate should return empty string if parsing fails`() {
         val input = "invalid-date"
         assertEquals("", input.toReadableDate())
     }
 
     @Test
-    fun `toReadableDate should handle null-like empty string`() {
+    fun `toReadableDate should handle empty string`() {
         val input = ""
         assertEquals("", input.toReadableDate())
     }
