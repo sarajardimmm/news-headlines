@@ -53,8 +53,8 @@ fun HeadlineItem(
                     imageUrl = article.imageUrl,
                     title = article.title,
                     modifier = Modifier
-                        .weight(1f)
-                        .aspectRatio(1.5f) // Responsive height based on width
+                        .fillMaxWidth(0.42f)
+                        .aspectRatio(16f / 9f)
                 )
 
                 Column(
