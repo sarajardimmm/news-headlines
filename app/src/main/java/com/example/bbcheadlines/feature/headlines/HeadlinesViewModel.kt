@@ -7,13 +7,14 @@ import com.example.bbcheadlines.domain.model.Article
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,7 +50,6 @@ class HeadlinesViewModel @Inject constructor(
         loadJob = viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
-            delay(250)
             try {
                 val articles = repository.getTopHeadlines()
                 _uiState.update {
@@ -59,11 +59,13 @@ class HeadlinesViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
+                val errorDescription = mapExceptionToMessage(e)
+
                 if (uiState.value.articles.isEmpty()) {
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            errorMessage = "Failed to load headlines.\n\n${e.message}"
+                            errorMessage = errorDescription
                         )
                     }
                 } else {
@@ -71,6 +73,14 @@ class HeadlinesViewModel @Inject constructor(
                     _events.send(HeadlinesEvent.ShowRefreshError)
                 }
             }
+        }
+    }
+
+    private fun mapExceptionToMessage(e: Exception): String {
+        return when (e) {
+            is IOException -> "Network error. Please check your internet connection."
+            is HttpException -> "Server error. Please try again later."
+            else -> "Failed to load headlines."
         }
     }
 }
