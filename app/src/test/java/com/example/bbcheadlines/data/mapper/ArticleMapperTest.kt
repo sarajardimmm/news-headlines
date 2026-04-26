@@ -24,7 +24,7 @@ class ArticleMapperTest {
         // Then
         assertEquals("Title", domain.title)
         assertEquals("Description", domain.description)
-        assertEquals("Content", domain.content)
+        assertEquals("Content...", domain.content)
         assertEquals("url", domain.imageUrl)
         assertEquals("2024-04-20T21:23:26Z", domain.publishedAtRaw)
         // publishedAt is formatted by toReadableDate, which we test separately in DateUtilsTest
