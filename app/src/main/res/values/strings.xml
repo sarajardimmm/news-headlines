@@ -5,4 +5,9 @@
     <string name="back">Back</string>
     <string name="read_full_article">Read full article</string>
     <string name="unable_to_refresh">Unable to refresh</string>
+    <string name="biometric_title">App Authentication</string>
+    <string name="biometric_subtitle">Authenticate to access your news headlines</string>
+    <string name="biometric_negative_button">Cancel</string>
+    <string name="app_locked">Access Restricted</string>
+    <string name="authenticate_to_unlock">Please authenticate to view the latest news</string>
 </resources>

@@ -13,7 +13,8 @@ This was built as part of a technical challenge. The goal was to implement the r
 - Multiple build flavors (BBC / ABC)
 - Demo mode (no API key required)
 - Unit tests and Compose UI tests
-  
+- Biometric authentication on app launch when available and configured on the device
+
 ---
 
 ## Running the app
@@ -87,7 +88,7 @@ back navigation
 ## BBC — Article Detail
 <img src="https://github.com/user-attachments/assets/988d9f2f-d176-455d-923f-fa7f7971fb6a" width="20%"/>
 
-## BBC — Larger Screen Layout (Tablet)
+## BBC — Larger Screen Layout
 <img src="https://github.com/user-attachments/assets/5b42e1be-724c-4809-ab9c-8330852a93cc" width="20%"/>
 <img src="https://github.com/user-attachments/assets/dd3c4198-dea5-4e51-be02-a010d23b7f5a" width="20%"/>
 <img src="https://github.com/user-attachments/assets/f2f3484b-eb22-4788-917f-b17068c49e80" width="40%"/>

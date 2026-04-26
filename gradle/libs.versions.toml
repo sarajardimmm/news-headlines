@@ -1,5 +1,6 @@
 [versions]
 agp = "9.1.1"
+biometric = "1.1.0"
 coilCompose = "2.7.0"
 converterGson = "3.0.0"
 coreKtx = "1.18.0"
@@ -22,6 +23,7 @@ kotlinxCoroutinesTest = "1.10.2"
 turbine = "1.1.0"
 
 [libraries]
+androidx-biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
