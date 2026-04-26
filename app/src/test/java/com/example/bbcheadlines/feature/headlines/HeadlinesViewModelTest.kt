@@ -59,7 +59,8 @@ class HeadlinesViewModelTest {
     @Test
     fun `loadHeadlines error should update uiState from loading to error`() = runTest {
         // Given
-        coEvery { repository.getTopHeadlines() } throws Exception("Network error")
+        val errorMessage = "Network error"
+        coEvery { repository.getTopHeadlines() } throws Exception(errorMessage)
 
         // When
         val viewModel = HeadlinesViewModel(repository)
@@ -73,7 +74,7 @@ class HeadlinesViewModelTest {
             val errorState = awaitItem()
             assertFalse(errorState.isLoading)
             assertTrue(errorState.articles.isEmpty())
-            assertEquals("Failed to load headlines.", errorState.errorMessage)
+            assertEquals("Failed to load headlines.\n\n$errorMessage", errorState.errorMessage)
         }
     }
 
@@ -89,14 +90,15 @@ class HeadlinesViewModelTest {
 
     @Test
     fun `loadHeadlines retry after error should clear error and load articles`() = runTest {
-        coEvery { repository.getTopHeadlines() } throws Exception("Network error") andThen listOf(
+        val errorMessage = "Network error"
+        coEvery { repository.getTopHeadlines() } throws Exception(errorMessage) andThen listOf(
             Article("Title 1", "Desc 1", "Content 1", null, "url 1", "Date 1", "Raw Date 1")
         )
 
         val viewModel = HeadlinesViewModel(repository)
 
         testDispatcher.scheduler.advanceUntilIdle()
-        assertEquals("Failed to load headlines.", viewModel.uiState.value.errorMessage)
+        assertEquals("Failed to load headlines.\n\n$errorMessage", viewModel.uiState.value.errorMessage)
 
         viewModel.loadHeadlines()
         testDispatcher.scheduler.advanceUntilIdle()
